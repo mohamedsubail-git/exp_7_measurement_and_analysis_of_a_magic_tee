@@ -1,121 +1,80 @@
-# exp_8_design_and_simulation_of_dipole_antenna
-Design and Simulation of a Halfwave Dipole Antenna using using Ansys HFSS
-# Experiment 8 — Design and Simulation of a Half-Wave Dipole Antenna Using Ansys HFSS
+# exp_7_measurement_and_analysis_of_a_magic_tee
 
-
+# Experiment 7 — Measurement and Analysis of a Magic Tee
 ---
 
-## Aim 
+## Aim
 
-To design and simulate a half-wave dipole antenna at a specified resonant frequency using Ansys HFSS, and to study its return loss, VSWR, gain and radiation pattern.
+To measure the isolation between the E and H arms of a magic tee and study the characteristics of the magic tee.
+  
+## Apparatus Used
 
-## Software Used
+Klystron power supply, klystron mount, isolator, attenuator, frequency meter, VSWR meter, magic tee and matched terminations.
 
-Ansys HFSS (High Frequency Structure Simulator)
+## Experimental Setup
+
+<img width="863" height="215" alt="image" src="https://github.com/user-attachments/assets/ffa30dc6-d64e-4042-b5bd-a7d08833dc7c" />
+
 
 ---
 
 ## Theory
 
-A **dipole antenna** is one of the simplest and most widely used radiating structures, consisting of two straight conductors fed at the centre. When the total length of the dipole is half a wavelength (λ/2) at the operating frequency, it is called a **half-wave dipole**.
+A four-port junction combining an E-plane and an H-plane tee is called a **hybrid tee**. When matching elements are introduced to reduce reflections it becomes a **magic tee**.
 
-For a thin half-wave dipole:
+<img width="438" height="357" alt="image" src="https://github.com/user-attachments/assets/96c95d2e-d089-4a01-b7c8-d79df4788936" />
 
-```
-Length, L = λ/2 = c / (2f)
-```
 
-where **c** is the velocity of light and **f** is the operating frequency.
+The arm forming an H-plane tee with the collinear arms is the **H-arm** (shunt arm); the arm forming an E-plane tee with them is the **E-arm** (series arm). The shunt and series arms are polarised — the voltage vectors in the two arms are perpendicular — so as long as nothing in the junction rotates the polarisation there can be no coupling between them. Posts and irises match the E and H arms to minimise reflections from these two ports.
 
-Each arm of the dipole is therefore λ/4 long. In practice the physical length is slightly less than the calculated free-space value because of the end effect, so a **length reduction factor (k)**, typically 0.95, is applied:
+The "magic" lies in how power divides among the arms:
 
-```
-L(effective) = k × (λ/2)
-```
+* A signal fed into the shunt (H) arm divides equally and **in phase** into the two side arms, with no coupling to the E-arm.
+* A signal fed into the series (E) arm also divides equally into the two side arms, but the halves are **180° out of phase**, with no coupling to the H-arm.
+* Power fed into one side arm divides equally into the shunt and series arms with no coupling to the other side arm.
 
-The radius of the dipole conductor is generally chosen such that L/d (length-to-diameter ratio) lies between 100 and 1000 for a thin-wire approximation to hold.
+That is, **opposite arms of a magic tee are isolated**. The magic tee can also be used as a signal combiner: signals fed into both side arms combine in phase at the H-arm and 180° out of phase at the E-arm.
 
-**Key characteristics of an ideal half-wave dipole:**
+A magic tee is normally characterised by two quantities:
 
-| Parameter | Typical value |
-|---|---|
-| Input impedance (free space) | ≈ 73 + j42.5 Ω |
-| Directivity | ≈ 2.15 dBi |
-| Radiation pattern (E-plane) | Figure-of-eight |
-| Radiation pattern (H-plane) | Omnidirectional (circular) |
-| Bandwidth | Narrow (few %) |
+1. **Isolation between E and H arms** — with power P_E flowing into the E-arm and P_H flowing out of the H-arm (both collinear arms match-terminated):
 
-The antenna is usually fed at the centre gap using a **lumped port** or a **wave port**, and its performance is evaluated using the reflection coefficient (S11), VSWR, gain, directivity and 3-D radiation pattern obtained from the simulation.
+   ```
+   Isolation (dB) = −10 log₁₀ (P_H / P_E)
+   ```
 
----
+2. **Power division in the collinear arms** — the power fed into either the E or H arm should divide equally between the side arms when the opposite port is match-terminated. With P_C1 and P_C2 the side-arm powers:
 
-## Design Specifications
-
-| Parameter | Value |
-|---|---|
-| Operating frequency (f) | ______ GHz |
-| Wavelength, λ = c/f | ______ mm |
-| Dipole length, L = λ/2 | ______ mm |
-| Arm length, L/2 | ______ mm |
-| Conductor radius | ______ mm |
-| Feed gap | ______ mm |
-| Substrate / boundary | Radiation box (λ/4 air-buffer on all sides) |
+   ```
+   Coupling (dB) = −10 log₁₀ (P_C1 / P_H) = −10 log₁₀ (P_C2 / P_H)
+   ```
 
 ---
 
 ## Procedure
 
-1. **Launch Ansys HFSS** and create a new project. Insert an **HFSS Design** with solution type **Driven Modal**.
-2. **Set the model units** to mm (or the unit convenient for the design).
-3. **Draw the dipole:**
-   - Create two cylinders (or thin rectangular strips) of radius *r* and length *L/2* each, placed along the Z-axis, separated by a small feed gap at the origin.
-   - Assign the material as a **perfect conductor (PEC)** or copper.
-4. **Assign the excitation:**
-   - At the feed gap, create a small sheet/line and assign a **Lumped Port** (with an appropriate impedance line and resistance, typically 50 Ω) or a **Lumped RLC/Gap Source**.
-5. **Create the radiation boundary:**
-   - Draw an **air box** (vacuum) around the dipole, at least λ/4 away from the antenna in all directions.
-   - Assign the outer surface of the air box as a **Radiation Boundary**.
-6. **Set up the analysis:**
-   - Add a **Solution Setup** with the solution frequency equal to the design frequency.
-   - Add a **Frequency Sweep** (Fast/Interpolating) over the band of interest.
-7. **Add radiation pattern reports:**
-   - Insert a **Far Field Setup** (Infinite Sphere) to compute the 3-D radiation pattern.
-8. **Validate and run the simulation** (Validation Check → Analyze All).
-9. **Post-process the results:**
-   - Plot **S11 (return loss)** vs frequency.
-   - Plot **VSWR** vs frequency.
-   - Plot the **2-D polar** and **3-D radiation patterns**.
-   - Note the **gain**, **directivity** and **radiation efficiency** at the resonant frequency.
 
----
+1. Set up the equipment as shown in Figure.
+2. Keep the control knobs of the klystron power supply as follows:
 
-## Observations
+   | Control | Setting |
+   |---|---|
+   | Mode switch | AM |
+   | Beam voltage knob | Fully anti-clockwise |
+   | Repeller voltage knob | Fully clockwise |
+   | Meter switch | Cathode voltage position |
+3. Measure the values from the VSWR meter for E-Arm and H-Arm as input port.
 
+## Observation (Measurement of isolation between E and H arms)
+<img width="1200" height="1600" alt="WhatsApp Image 2026-09-19 at 10 38 51 AM" src="https://github.com/user-attachments/assets/8802d580-0a5e-44ed-b99d-ce9b2950f4b7" />
 
-
-### Graphs
-
-<img width="1200" height="1600" alt="WhatsApp Image 2026-09-19 at 10 38 51 AM (2)" src="https://github.com/user-attachments/assets/56284614-1c10-47f0-9b5c-b435b2e68cf3" />
-<img width="1200" height="1600" alt="WhatsApp Image 2026-09-19 at 10 38 51 AM (1)" src="https://github.com/user-attachments/assets/afbd2536-3db4-4e11-91dc-898c6a4ee240" />
-
+<img width="1200" height="1600" alt="WhatsApp Image 2026-09-19 at 10 38 52 AM (2)" src="https://github.com/user-attachments/assets/d362406c-c950-451b-837a-34181f7b01f7" />
 
 ## Precautions
 
-1. Ensure the radiation boundary is at least λ/4 away from the antenna structure on all sides to avoid reflection errors.
-2. Mesh the model finely enough (especially near the feed gap) for accurate convergence.
-3. Verify that the port impedance matches the intended feed impedance before analysing S11/VSWR.
-4. Check for geometry validation errors before running the simulation.
-
-## Result
- 
-Resonant Frequency = GHz  
-
-Return loss = dB
-
-VSWR = 
-
-Gain = 
+* Check the connections before switching on the kit.
+* Make all connections properly.
+* Take the observations carefully.
 
 ## Conclusion
-
-A half-wave dipole antenna was designed and simulated at ______ GHz using Ansys HFSS.
+The scattering parameters and power division properties of the Magic (Hybrid) Tee were successfully measured.
